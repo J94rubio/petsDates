@@ -2,11 +2,10 @@ import os
 
 import requests
 
+from .backends import solicitar
 
-BASE_URL = os.environ.get(
-    "IA_API_URL",
-    "http://127.0.0.1:8003/api/chat"
-).rstrip("/")
+
+TIEMPO_LECTURA_IA = float(os.environ.get('IA_READ_TIMEOUT', '120'))
 
 
 def enviar_mensaje(
@@ -14,25 +13,30 @@ def enviar_mensaje(
     previous_interaction_id=None
 ):
 
-    response = requests.post(
-        f"{BASE_URL}/",
-        json={
-            "mensaje": mensaje,
-            "previous_interaction_id": (
-                previous_interaction_id
-            )
-        },
-        timeout=240
-    )
+    try:
+        respuesta = solicitar(
+            'ia',
+            'POST',
+            '/',
+            None,
+            tiempo_lectura=TIEMPO_LECTURA_IA,
+            json={
+                "mensaje": mensaje,
+                "previous_interaction_id": (
+                    previous_interaction_id
+                )
+            }
+        )
 
-    if not response.ok:
+    except requests.HTTPError as error:
         try:
-            detalle = response.json().get("detail")
+            detalle = error.response.json().get("detail")
         except ValueError:
             detalle = None
 
         raise RuntimeError(
-            detalle or f"El servicio de IA respondió {response.status_code}"
+            detalle
+            or f"El servicio de IA respondió {error.response.status_code}"
         )
 
-    return response.json()
+    return respuesta.json()

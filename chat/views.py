@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 
 from services.ia_api import enviar_mensaje
+from services.trazas import lenguajes_usados
 
 
 def chat_veterinario(request):
@@ -43,10 +44,13 @@ def chat_veterinario(request):
                 'chat_interaction_id'
             ] = resultado['interaction_id']
 
+            usados = lenguajes_usados()
+
             return JsonResponse(
                 {
                     'respuesta': resultado['respuesta'],
-                    'interaction_id': resultado['interaction_id']
+                    'interaction_id': resultado['interaction_id'],
+                    'servido_por': usados[0] if usados else None
                 }
             )
 

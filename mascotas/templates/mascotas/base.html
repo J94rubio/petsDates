@@ -49,6 +49,23 @@
 
     <main>
 
+        {% if error %}
+            <div class="alert-error">
+                ⚠️ {{ error }}
+            </div>
+        {% endif %}
+
+        {% if servido_por %}
+            <div class="servido-por">
+                Datos servidos por:
+                {% for s in servido_por %}
+                    <span class="lang-badge lang-{{ s.clave }}">
+                        {{ s.nombre }}{% if s.respaldo %} (respaldo automático){% endif %}
+                    </span>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         {% block content %}
         {% endblock %}
 

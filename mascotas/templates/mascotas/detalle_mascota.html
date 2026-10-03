@@ -6,6 +6,8 @@
 
 {% block content %}
 
+    {% if mascota %}
+
     <div class="card">
 
         <h2>🐾 {{ mascota.nombre }}</h2>
@@ -32,13 +34,10 @@
 
         <br>
 
-        <a
-            href="{% url 'citas_mascota' mascota.id %}"
-            class="btn">
+        {% url 'citas_mascota' mascota.id as url_citas %}
+        {% include 'mascotas/_botones_lenguaje.html' with url=url_citas texto='📅 Ver citas' %}
 
-            📅 Ver citas
-
-        </a>
+        <br>
 
         <a
             href="{% url 'lista_mascotas' %}"
@@ -49,5 +48,23 @@
         </a>
 
     </div>
+
+    {% else %}
+
+    <div class="card">
+
+        <p>No se pudo cargar la mascota.</p>
+
+        <a
+            href="{% url 'lista_mascotas' %}"
+            class="btn btn-secondary">
+
+            ← Volver
+
+        </a>
+
+    </div>
+
+    {% endif %}
 
 {% endblock %}

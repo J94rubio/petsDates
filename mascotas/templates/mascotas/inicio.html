@@ -27,9 +27,8 @@
 
             <p>Consulta y registra tus mascotas y sus citas.</p>
 
-            <a href="{% url 'lista_mascotas' %}" class="btn">
-                Ver mascotas
-            </a>
+            {% url 'lista_mascotas' as url_mascotas %}
+            {% include 'mascotas/_botones_lenguaje.html' with url=url_mascotas texto='Ver mascotas' %}
 
         </div>
 

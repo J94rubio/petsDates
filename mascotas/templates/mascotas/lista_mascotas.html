@@ -39,13 +39,8 @@
                         {{ mascota.raza }}
                     </p>
 
-                    <a
-                        href="{% url 'detalle_mascota' mascota.id %}"
-                        class="btn">
-
-                        Ver detalle
-
-                    </a>
+                    {% url 'detalle_mascota' mascota.id as url_detalle %}
+                    {% include 'mascotas/_botones_lenguaje.html' with url=url_detalle texto='Ver detalle' %}
 
                 </li>
 

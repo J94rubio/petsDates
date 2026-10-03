@@ -1,60 +1,33 @@
-import os
-
-import requests
+from .backends import solicitar
 
 
-BASE_URL = os.environ.get(
-    "MASCOTAS_API_URL",
-    "http://127.0.0.1:8001/api/mascotas"
-).rstrip("/")
-
-
-def listar_mascotas():
+def listar_mascotas(lenguaje=None):
     """
     Obtiene todas las mascotas.
     """
 
-    response = requests.get(
-        f"{BASE_URL}/"
-    )
-
-    response.raise_for_status()
-
-    return response.json()
+    return solicitar('mascotas', 'GET', '/', lenguaje).json()
 
 
-def obtener_mascota(mascota_id):
+def obtener_mascota(mascota_id, lenguaje=None):
     """
     Obtiene una mascota por su ID.
     """
 
-    response = requests.get(
-        f"{BASE_URL}/{mascota_id}"
-    )
-
-    response.raise_for_status()
-
-    return response.json()
+    return solicitar('mascotas', 'GET', f'/{mascota_id}', lenguaje).json()
 
 
-def crear_mascota(datos):
+def crear_mascota(datos, lenguaje=None):
     """
     Crea una nueva mascota.
 
     datos debe ser un diccionario.
     """
 
-    response = requests.post(
-        f"{BASE_URL}/",
-        json=datos
-    )
-
-    response.raise_for_status()
-
-    return response.json()
+    return solicitar('mascotas', 'POST', '/', lenguaje, json=datos).json()
 
 
-def actualizar_mascota(mascota_id, datos):
+def actualizar_mascota(mascota_id, datos, lenguaje=None):
     """
     Actualiza una mascota existente.
 
@@ -62,25 +35,16 @@ def actualizar_mascota(mascota_id, datos):
     que se desean modificar.
     """
 
-    response = requests.put(
-        f"{BASE_URL}/{mascota_id}",
-        json=datos
-    )
-
-    response.raise_for_status()
-
-    return response.json()
+    return solicitar(
+        'mascotas', 'PUT', f'/{mascota_id}', lenguaje, json=datos
+    ).json()
 
 
-def eliminar_mascota(mascota_id):
+def eliminar_mascota(mascota_id, lenguaje=None):
     """
     Elimina una mascota por su ID.
     """
 
-    response = requests.delete(
-        f"{BASE_URL}/{mascota_id}"
-    )
-
-    response.raise_for_status()
+    solicitar('mascotas', 'DELETE', f'/{mascota_id}', lenguaje)
 
     return True

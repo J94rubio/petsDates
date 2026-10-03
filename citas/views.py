@@ -1,53 +1,45 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CitaForm
-from .models import Cita
-from mascotas.models import Mascota
+from django.shortcuts import redirect, render
+from django.urls import reverse
 
+from services.backends import ServicioNoDisponible, con_lenguaje, lenguaje_de
+from services.citas_api import (
+    actualizar_cita,
+    crear_cita as crear_cita_api,
+    obtener_cita,
+)
 from services.mascotas_api import obtener_mascota
-from services.citas_api import crear_cita as crear_cita_api, obtener_cita, actualizar_cita
+
+from .forms import CitaForm
 
 
-# def crear_cita(request, mascota_id):
+def _volver_a_citas(mascota_id, lenguaje):
+    return redirect(
+        con_lenguaje(
+            reverse('citas_mascota', args=[mascota_id]),
+            lenguaje
+        )
+    )
 
-#     mascota = get_object_or_404(
-#         Mascota,
-#         id=mascota_id
-#     )
-
-#     if request.method == 'POST':
-
-#         form = CitaForm(request.POST)
-
-#         if form.is_valid():
-
-#             cita = form.save(commit=False)
-
-#             cita.mascota = mascota
-
-#             cita.save()
-
-#             return redirect(
-#                 'citas_mascota',
-#                 mascota_id=mascota.id
-#             )
-
-#     else:
-
-#         form = CitaForm()
-
-#     return render(
-#         request,
-#         'citas/crear_cita.html',
-#         {
-#             'form': form,
-#             'mascota': mascota
-#         }
-#     )
 
 def crear_cita(request, mascota_id):
 
+    lenguaje = lenguaje_de(request)
+    error = None
+
     try:
-        mascota = obtener_mascota(mascota_id)
+        mascota = obtener_mascota(mascota_id, lenguaje)
+
+    except ServicioNoDisponible as e:
+        return render(
+            request,
+            'citas/crear_cita.html',
+            {
+                'form': CitaForm(),
+                'mascota': {'id': mascota_id},
+                'error': str(e)
+            }
+        )
+
     except Exception:
         return redirect('lista_mascotas')
 
@@ -64,12 +56,13 @@ def crear_cita(request, mascota_id):
                 'estado': form.cleaned_data['estado'],
             }
 
-            crear_cita_api(datos)
+            try:
+                crear_cita_api(datos, lenguaje)
 
-            return redirect(
-                'citas_mascota',
-                mascota_id=mascota_id
-            )
+                return _volver_a_citas(mascota_id, lenguaje)
+
+            except ServicioNoDisponible as e:
+                error = str(e)
 
     else:
         form = CitaForm()
@@ -79,60 +72,35 @@ def crear_cita(request, mascota_id):
         'citas/crear_cita.html',
         {
             'form': form,
-            'mascota': mascota
+            'mascota': mascota,
+            'error': error
         }
     )
-    
-# def editar_cita(request, mascota_id, cita_id):
 
-#     cita = get_object_or_404(
-#         Cita,
-#         id=cita_id,
-#         mascota_id=mascota_id
-#     )
-
-#     if request.method == 'POST':
-
-#         form = CitaForm(
-#             request.POST,
-#             instance=cita
-#         )
-
-#         if form.is_valid():
-
-#             form.save()
-
-#             return redirect(
-#                 'citas_mascota',
-#                 mascota_id=mascota_id
-#             )
-
-#     else:
-
-#         form = CitaForm(
-#             instance=cita
-#         )
-
-#     return render(
-#         request,
-#         'citas/editar_cita.html',
-#         {
-#             'form': form,
-#             'cita': cita
-#         }
-#     )
 
 def editar_cita(request, mascota_id, cita_id):
 
+    lenguaje = lenguaje_de(request)
+    error = None
+
     try:
-        mascota = obtener_mascota(mascota_id)
-        cita = obtener_cita(cita_id)
+        mascota = obtener_mascota(mascota_id, lenguaje)
+        cita = obtener_cita(cita_id, lenguaje)
+
+    except ServicioNoDisponible as e:
+        return render(
+            request,
+            'citas/editar_cita.html',
+            {
+                'form': None,
+                'cita': None,
+                'mascota': {'id': mascota_id},
+                'error': str(e)
+            }
+        )
 
     except Exception:
-        return redirect(
-            'citas_mascota',
-            mascota_id=mascota_id
-        )
+        return _volver_a_citas(mascota_id, lenguaje)
 
     if request.method == 'POST':
 
@@ -147,15 +115,13 @@ def editar_cita(request, mascota_id, cita_id):
                 'estado': form.cleaned_data['estado'],
             }
 
-            actualizar_cita(
-                cita_id,
-                datos
-            )
+            try:
+                actualizar_cita(cita_id, datos, lenguaje)
 
-            return redirect(
-                'citas_mascota',
-                mascota_id=mascota_id
-            )
+                return _volver_a_citas(mascota_id, lenguaje)
+
+            except ServicioNoDisponible as e:
+                error = str(e)
 
     else:
 
@@ -173,6 +139,7 @@ def editar_cita(request, mascota_id, cita_id):
         {
             'form': form,
             'cita': cita,
-            'mascota': mascota
+            'mascota': mascota,
+            'error': error
         }
     )

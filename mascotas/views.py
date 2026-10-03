@@ -1,113 +1,97 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import redirect, render
+from django.urls import reverse
 
-from .models import Mascota
-from .forms import MascotaForm
+from services.backends import ServicioNoDisponible, con_lenguaje, lenguaje_de
+from services.citas_api import listar_citas_mascota
 from services.mascotas_api import (
+    crear_mascota as crear_mascota_api,
     listar_mascotas,
     obtener_mascota,
-    crear_mascota as crear_mascota_api
-) 
+)
 
-from services.citas_api import listar_citas_mascota
+from .forms import MascotaForm
 
 
 def lista_mascotas(request):
-    # mascotas = Mascota.objects.all()
-    mascotas = listar_mascotas()
+
+    lenguaje = lenguaje_de(request)
+
+    try:
+        mascotas = listar_mascotas(lenguaje)
+        error = None
+
+    except ServicioNoDisponible as e:
+        mascotas = []
+        error = str(e)
 
     return render(
         request,
         'mascotas/lista_mascotas.html',
-        {'mascotas': mascotas}
+        {
+            'mascotas': mascotas,
+            'error': error
+        }
     )
 
+
 def detalle_mascota(request, mascota_id):
-    # mascota = get_object_or_404(
-    #     Mascota,
-    #     id=mascota_id
-    # )
-    
+
+    lenguaje = lenguaje_de(request)
+    error = None
+
     try:
-        mascota = obtener_mascota(mascota_id)
+        mascota = obtener_mascota(mascota_id, lenguaje)
+
+    except ServicioNoDisponible as e:
+        mascota = None
+        error = str(e)
+
     except Exception:
-        return render(
-            request,
-            'mascotas/detalle_mascota.html',
-            {'mascota': None}
-        )
+        mascota = None
 
     return render(
         request,
         'mascotas/detalle_mascota.html',
-        {'mascota': mascota}
+        {
+            'mascota': mascota,
+            'error': error
+        }
     )
 
 
-# def citas_mascota(request, mascota_id):
-
-#     mascota = get_object_or_404(
-#         Mascota,
-#         id=mascota_id
-#     )
-
-#     citas = mascota.citas.all().order_by('fecha')
-
-#     return render(
-#         request,
-#         'mascotas/citas_mascota.html',
-#         {
-#             'mascota': mascota,
-#             'citas': citas
-#         }
-#     )
-
 def citas_mascota(request, mascota_id):
 
+    lenguaje = lenguaje_de(request)
+    error = None
+
     try:
-        mascota = obtener_mascota(mascota_id)
-        citas = listar_citas_mascota(mascota_id)
+        mascota = obtener_mascota(mascota_id, lenguaje)
+        citas = listar_citas_mascota(mascota_id, lenguaje)
+
+    except ServicioNoDisponible as e:
+        mascota = None
+        citas = []
+        error = str(e)
 
     except Exception:
-        return render(
-            request,
-            'mascotas/citas_mascota.html',
-            {
-                'mascota': None,
-                'citas': []
-            }
-        )
+        mascota = None
+        citas = []
 
     return render(
         request,
         'mascotas/citas_mascota.html',
         {
             'mascota': mascota,
-            'citas': citas
+            'citas': citas,
+            'error': error
         }
     )
-    
-# def crear_mascota(request):
 
-#     if request.method == 'POST':
-
-#         form = MascotaForm(request.POST)
-
-#         if form.is_valid():
-#             form.save()
-
-#             return redirect('lista_mascotas')
-
-#     else:
-
-#         form = MascotaForm()
-
-#     return render(
-#         request,
-#         'mascotas/crear_mascota.html',
-#         {'form': form}
-#     )
 
 def crear_mascota(request):
+
+    lenguaje = lenguaje_de(request)
+    error = None
 
     if request.method == 'POST':
 
@@ -123,9 +107,15 @@ def crear_mascota(request):
                 'propietario': form.cleaned_data['propietario'],
             }
 
-            crear_mascota_api(datos)
+            try:
+                crear_mascota_api(datos, lenguaje)
 
-            return redirect('lista_mascotas')
+                return redirect(
+                    con_lenguaje(reverse('lista_mascotas'), lenguaje)
+                )
+
+            except ServicioNoDisponible as e:
+                error = str(e)
 
     else:
         form = MascotaForm()
@@ -133,5 +123,8 @@ def crear_mascota(request):
     return render(
         request,
         'mascotas/crear_mascota.html',
-        {'form': form}
+        {
+            'form': form,
+            'error': error
+        }
     )

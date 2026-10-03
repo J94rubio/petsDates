@@ -18,9 +18,7 @@
 
         {{ form.as_p }}
 
-        <button type="submit">
-            Guardar cita
-        </button>
+        {% include 'mascotas/_botones_guardar.html' with texto='Guardar cita' %}
 
     </form>
 

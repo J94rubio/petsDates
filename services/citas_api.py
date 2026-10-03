@@ -1,98 +1,61 @@
-import os
-
-import requests
+from .backends import solicitar
 
 
-BASE_URL = os.environ.get(
-    "CITAS_API_URL",
-    "http://127.0.0.1:8002/api/citas"
-).rstrip("/")
+def _con_fecha_iso(datos):
+    datos = datos.copy()
+
+    if hasattr(datos.get('fecha'), 'isoformat'):
+        datos['fecha'] = datos['fecha'].isoformat()
+
+    return datos
 
 
-def listar_citas():
+def listar_citas(lenguaje=None):
     """
     Obtiene todas las citas.
     """
 
-    response = requests.get(
-        f"{BASE_URL}/"
-    )
-
-    response.raise_for_status()
-
-    return response.json()
+    return solicitar('citas', 'GET', '/', lenguaje).json()
 
 
-def obtener_cita(cita_id):
+def obtener_cita(cita_id, lenguaje=None):
     """
     Obtiene una cita por su ID.
     """
 
-    response = requests.get(
-        f"{BASE_URL}/{cita_id}"
-    )
-
-    response.raise_for_status()
-
-    return response.json()
+    return solicitar('citas', 'GET', f'/{cita_id}', lenguaje).json()
 
 
-def listar_citas_mascota(mascota_id):
+def listar_citas_mascota(mascota_id, lenguaje=None):
     """
     Obtiene todas las citas asociadas
     a una mascota específica.
     """
 
-    response = requests.get(
-        f"{BASE_URL}/mascota/{mascota_id}"
-    )
-
-    response.raise_for_status()
-
-    return response.json()
+    return solicitar(
+        'citas', 'GET', f'/mascota/{mascota_id}', lenguaje
+    ).json()
 
 
-def crear_cita(datos):
-    datos = datos.copy()
+def crear_cita(datos, lenguaje=None):
 
-    if hasattr(datos.get('fecha'), 'isoformat'):
-        datos['fecha'] = datos['fecha'].isoformat()
-
-    response = requests.post(
-        f"{BASE_URL}/",
-        json=datos
-    )
-
-    response.raise_for_status()
-
-    return response.json()
+    return solicitar(
+        'citas', 'POST', '/', lenguaje, json=_con_fecha_iso(datos)
+    ).json()
 
 
-def actualizar_cita(cita_id, datos):
+def actualizar_cita(cita_id, datos, lenguaje=None):
 
-    datos = datos.copy()
+    return solicitar(
+        'citas', 'PUT', f'/{cita_id}', lenguaje, json=_con_fecha_iso(datos)
+    ).json()
 
-    if hasattr(datos.get('fecha'), 'isoformat'):
-        datos['fecha'] = datos['fecha'].isoformat()
 
-    response = requests.put(
-        f"{BASE_URL}/{cita_id}",
-        json=datos
-    )
-
-    response.raise_for_status()
-
-    return response.json()
-
-def eliminar_cita(cita_id):
+def eliminar_cita(cita_id, lenguaje=None):
     """
     Elimina una cita por su ID.
     """
 
-    response = requests.delete(
-        f"{BASE_URL}/{cita_id}"
-    )
-
-    response.raise_for_status()
+    solicitar('citas', 'DELETE', f'/{cita_id}', lenguaje)
 
     return True

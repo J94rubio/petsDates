@@ -189,7 +189,7 @@
     ==================================================
     */
 
-    function agregarMensajeAsistente(respuesta) {
+    function agregarMensajeAsistente(respuesta, servidoPor) {
 
         const message = document.createElement('div');
 
@@ -219,6 +219,20 @@
         message.appendChild(nombre);
 
         message.appendChild(contenido);
+
+        if (servidoPor) {
+
+            const origen = document.createElement('div');
+
+            origen.className = 'chat-origen';
+
+            origen.textContent =
+                'Respondido por ' + servidoPor.nombre +
+                (servidoPor.respaldo ? ' (respaldo automático)' : '');
+
+            message.appendChild(origen);
+
+        }
 
         chatMessages.insertBefore(message, typingMessage);
 
@@ -335,7 +349,8 @@
                 */
 
                 agregarMensajeAsistente(
-                    data.respuesta
+                    data.respuesta,
+                    data.servido_por
                 );
 
 
