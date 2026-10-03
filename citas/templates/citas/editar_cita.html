@@ -1,0 +1,94 @@
+{% extends 'mascotas/base.html' %}
+
+{% block title %}
+    Editar cita
+{% endblock %}
+
+{% block content %}
+
+    <h2>
+        ✏️ Editar cita
+    </h2>
+
+    <div class="card">
+
+        <h3>
+            🐾 {{ mascota.nombre }}
+        </h3>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button
+                type="submit"
+                class="btn">
+
+                💾 Guardar cambios
+
+            </button>
+
+        </form>
+
+        <br>
+
+        
+            <href="{% url 'citas_mascota' mascota.id %}"
+            class="btn btn-secondary">
+
+            ← Cancelar
+
+        </a>
+
+    </div>
+
+{% endblock %}
+{% comment %} {% extends 'mascotas/base.html' %}
+
+{% block title %}
+    Editar cita
+{% endblock %}
+
+{% block content %}
+
+    <h2>
+        ✏️ Editar cita
+    </h2>
+
+    <div class="card">
+
+        <h3>
+            🐾 {{ cita.mascota.nombre }}
+        </h3>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button
+                type="submit"
+                class="btn">
+
+                💾 Guardar cambios
+
+            </button>
+
+        </form>
+
+        <br>
+
+        <a
+            href="{% url 'citas_mascota' cita.mascota.id %}"
+            class="btn btn-secondary">
+
+            ← Cancelar
+
+        </a>
+
+    </div>
+
+{% endblock %} {% endcomment %}

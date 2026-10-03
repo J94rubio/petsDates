@@ -1,0 +1,53 @@
+{% extends 'mascotas/base.html' %}
+
+{% block title %}
+    {{ mascota.nombre }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="card">
+
+        <h2>🐾 {{ mascota.nombre }}</h2>
+
+        <p>
+            <strong>Especie:</strong>
+            {{ mascota.especie }}
+        </p>
+
+        <p>
+            <strong>Raza:</strong>
+            {{ mascota.raza }}
+        </p>
+
+        <p>
+            <strong>Edad:</strong>
+            {{ mascota.edad }} años
+        </p>
+
+        <p>
+            <strong>Propietario:</strong>
+            {{ mascota.propietario }}
+        </p>
+
+        <br>
+
+        <a
+            href="{% url 'citas_mascota' mascota.id %}"
+            class="btn">
+
+            📅 Ver citas
+
+        </a>
+
+        <a
+            href="{% url 'lista_mascotas' %}"
+            class="btn btn-secondary">
+
+            ← Volver
+
+        </a>
+
+    </div>
+
+{% endblock %}

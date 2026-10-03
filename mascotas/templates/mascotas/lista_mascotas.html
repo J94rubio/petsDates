@@ -1,0 +1,76 @@
+{% extends 'mascotas/base.html' %}
+
+{% block title %}
+    Mis mascotas
+{% endblock %}
+
+{% block content %}
+
+    <h2>🐾 Mis mascotas</h2>
+
+    <a href="{% url 'crear_mascota' %}"
+       class="btn">
+
+        + Registrar mascota
+
+    </a>
+
+    <br><br>
+
+    {% if mascotas %}
+
+        <ul class="pet-list">
+
+            {% for mascota in mascotas %}
+
+                <li>
+
+                    <h3>
+                        🐶 {{ mascota.nombre }}
+                    </h3>
+
+                    <p>
+                        <strong>Especie:</strong>
+                        {{ mascota.especie }}
+                    </p>
+
+                    <p>
+                        <strong>Raza:</strong>
+                        {{ mascota.raza }}
+                    </p>
+
+                    <a
+                        href="{% url 'detalle_mascota' mascota.id %}"
+                        class="btn">
+
+                        Ver detalle
+
+                    </a>
+
+                </li>
+
+            {% endfor %}
+
+        </ul>
+
+    {% else %}
+
+        <div class="card">
+
+            <p>
+                No hay mascotas registradas.
+            </p>
+
+            <a
+                href="{% url 'crear_mascota' %}"
+                class="btn">
+
+                Registrar primera mascota
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+{% endblock %}

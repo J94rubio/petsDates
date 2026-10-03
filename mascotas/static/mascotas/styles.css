@@ -1,0 +1,872 @@
+/* =========================
+   CONFIGURACIÓN GENERAL
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f7fb;
+    color: #1f2937;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    background: #2563eb;
+    color: white;
+    padding: 20px 40px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   CONTENIDO
+========================= */
+
+main {
+    width: 90%;
+    max-width: 1000px;
+
+    margin: 40px auto;
+}
+
+
+/* =========================
+   TITULOS
+========================= */
+
+h2 {
+    margin-bottom: 25px;
+    color: #111827;
+}
+
+h3 {
+    color: #374151;
+}
+
+
+/* =========================
+   TARJETAS
+========================= */
+
+.card {
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 25px;
+
+    margin-bottom: 20px;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================
+   BOTONES
+========================= */
+
+.btn {
+    display: inline-block;
+
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    background-color: #2563eb;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    border: none;
+
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #1d4ed8;
+}
+
+
+/* Botón secundario */
+
+.btn-secondary {
+    background-color: #6b7280;
+}
+
+.btn-secondary:hover {
+    background-color: #4b5563;
+}
+
+
+/* =========================
+   LISTA
+========================= */
+
+.pet-list {
+    list-style: none;
+
+    padding: 0;
+
+    display: grid;
+
+    gap: 20px;
+}
+
+.pet-list li {
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
+}
+
+
+/* =========================
+   CITAS
+========================= */
+
+.appointment {
+    background: white;
+
+    border-left: 5px solid #2563eb;
+
+    padding: 20px;
+
+    margin-bottom: 15px;
+
+    border-radius: 8px;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    text-align: center;
+
+    padding: 25px;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   FORMULARIOS
+========================= */
+
+form {
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+form p {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+    margin-bottom: 20px;
+}
+
+form label {
+    font-weight: bold;
+}
+
+form input,
+form select,
+form textarea {
+    padding: 10px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 7px;
+
+    font-size: 15px;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+    outline: none;
+
+    border-color: #2563eb;
+
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* =========================
+   ERRORES DE FORMULARIO
+========================= */
+
+.errorlist {
+    list-style: none;
+
+    padding: 0;
+
+    margin: 5px 0 10px;
+
+    color: #dc2626;
+
+    font-size: 14px;
+}
+
+.errorlist li {
+    background-color: #fee2e2;
+
+    border-left: 4px solid #dc2626;
+
+    padding: 8px 12px;
+
+    border-radius: 5px;
+}
+
+/* =========================
+   ESTADOS DE CITAS
+========================= */
+
+.status {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+
+/* Pendiente */
+
+.status-pendiente {
+    background-color: #fef3c7;
+
+    color: #92400e;
+}
+
+
+/* Confirmada */
+
+.status-confirmada {
+    background-color: #dbeafe;
+
+    color: #1e40af;
+}
+
+
+/* Completada */
+
+.status-completada {
+    background-color: #dcfce7;
+
+    color: #166534;
+}
+
+
+/* Cancelada */
+
+.status-cancelada {
+    background-color: #fee2e2;
+
+    color: #991b1b;
+}
+
+/* =========================================================
+   CHAT VETERINARIO
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   CONTENEDOR PRINCIPAL
+   --------------------------------------------------------- */
+
+.chat-container {
+    width: min(900px, 95%);
+    margin: 30px auto;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+    box-sizing: border-box;
+}
+
+
+/* ---------------------------------------------------------
+   HEADER
+   --------------------------------------------------------- */
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+
+.chat-header-icon {
+    width: 55px;
+    height: 55px;
+    min-width: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f1f5f9;
+    border-radius: 50%;
+
+    font-size: 28px;
+}
+
+
+.chat-header h2 {
+    margin: 0 0 6px 0;
+    font-size: 25px;
+}
+
+
+.chat-header p {
+    margin: 0;
+    color: #6b7280;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+
+/* ---------------------------------------------------------
+   ÁREA DE MENSAJES
+   --------------------------------------------------------- */
+
+.chat-messages {
+    min-height: 400px;
+    max-height: 500px;
+
+    overflow-y: auto;
+
+    padding: 20px;
+
+    background: #f5f7fa;
+
+    border-radius: 14px;
+
+    margin-bottom: 20px;
+
+    box-sizing: border-box;
+
+    scroll-behavior: smooth;
+}
+
+
+/* Scroll */
+
+.chat-messages::-webkit-scrollbar {
+    width: 7px;
+}
+
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+
+/* ---------------------------------------------------------
+   MENSAJES
+   --------------------------------------------------------- */
+
+.message {
+    padding: 14px 17px;
+
+    margin-bottom: 15px;
+
+    border-radius: 14px;
+
+    max-width: 75%;
+
+    line-height: 1.5;
+
+    box-sizing: border-box;
+
+    animation: messageAppear 0.25s ease;
+}
+
+
+@keyframes messageAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   MENSAJE DEL BOT
+   --------------------------------------------------------- */
+
+.message-bot {
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    margin-right: auto;
+
+    color: #1f2937;
+}
+
+
+.message-bot p {
+    margin: 7px 0;
+}
+
+
+.message-name {
+    font-weight: 600;
+
+    margin-bottom: 7px;
+
+    font-size: 14px;
+}
+
+
+/* ---------------------------------------------------------
+   MENSAJE DEL USUARIO
+   --------------------------------------------------------- */
+
+.message-user {
+    background: #dbeafe;
+
+    border: 1px solid #bfdbfe;
+
+    margin-left: auto;
+
+    color: #1e3a8a;
+}
+
+
+.message-user p {
+    margin: 0;
+}
+
+
+/* ---------------------------------------------------------
+   EJEMPLOS
+   --------------------------------------------------------- */
+
+.message-example {
+    margin-top: 15px !important;
+
+    font-weight: 600;
+}
+
+
+.example-list {
+    margin: 8px 0 0 0;
+
+    padding-left: 20px;
+
+    color: #4b5563;
+}
+
+
+.example-list li {
+    margin-bottom: 5px;
+}
+
+
+/* ---------------------------------------------------------
+   TYPING / LOADER DEL ASISTENTE
+   --------------------------------------------------------- */
+
+.typing-message {
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.typing-content {
+    display: flex;
+
+    align-items: center;
+
+    gap: 3px;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+.typing-dots {
+    display: inline-flex;
+
+    margin-left: 3px;
+}
+
+
+.typing-dots span {
+    animation: typing 1.4s infinite;
+
+    font-weight: bold;
+
+    font-size: 18px;
+
+    line-height: 10px;
+}
+
+
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+
+@keyframes typing {
+
+    0%,
+    60%,
+    100% {
+        opacity: 0.2;
+    }
+
+    30% {
+        opacity: 1;
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   FORMULARIO
+   --------------------------------------------------------- */
+
+.chat-form {
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+}
+
+
+.chat-form input {
+    flex: 1;
+
+    height: 45px;
+
+    padding: 0 15px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 9px;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+    box-sizing: border-box;
+}
+
+
+.chat-form input:focus {
+    border-color: #93c5fd;
+
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.10);
+}
+
+
+.chat-form input:disabled {
+    background: #f3f4f6;
+
+    cursor: not-allowed;
+}
+
+
+/* ---------------------------------------------------------
+   BOTÓN ENVIAR
+   --------------------------------------------------------- */
+
+.chat-form button {
+    width: 50px;
+
+    height: 45px;
+
+    min-width: 50px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    font-size: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.1s ease;
+}
+
+
+.chat-form button:hover:not(:disabled) {
+    transform: scale(1.04);
+}
+
+
+.chat-form button:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
+
+.chat-form button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.7;
+}
+
+
+/* ---------------------------------------------------------
+   SPINNER DEL BOTÓN
+   --------------------------------------------------------- */
+
+.chat-loader {
+    display: none;
+
+    width: 20px;
+
+    height: 20px;
+
+    border: 3px solid rgba(255, 255, 255, 0.4);
+
+    border-top-color: white;
+
+    border-radius: 50%;
+
+    animation: chat-spin 0.8s linear infinite;
+}
+
+
+@keyframes chat-spin {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   DISCLAIMER
+   --------------------------------------------------------- */
+
+.chat-disclaimer {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 7px;
+
+    margin-top: 15px;
+
+    padding: 10px 12px;
+
+    background: #f8fafc;
+
+    border-radius: 8px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   RESPONSIVE
+   --------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+    .chat-container {
+        width: 95%;
+
+        margin: 20px auto;
+
+        padding: 18px;
+    }
+
+
+    .chat-header h2 {
+        font-size: 21px;
+    }
+
+
+    .chat-header p {
+        font-size: 13px;
+    }
+
+
+    .chat-messages {
+        min-height: 350px;
+
+        max-height: 450px;
+
+        padding: 15px;
+    }
+
+
+    .message {
+        max-width: 88%;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .chat-container {
+        width: 100%;
+
+        margin: 10px 0;
+
+        padding: 12px;
+
+        border-radius: 12px;
+    }
+
+
+    .chat-header {
+        align-items: flex-start;
+    }
+
+
+    .chat-header-icon {
+        width: 45px;
+
+        height: 45px;
+
+        min-width: 45px;
+
+        font-size: 23px;
+    }
+
+
+    .chat-header h2 {
+        font-size: 19px;
+    }
+
+
+    .chat-messages {
+        min-height: 320px;
+
+        max-height: 400px;
+
+        padding: 12px;
+    }
+
+
+    .message {
+        max-width: 92%;
+
+        padding: 12px 14px;
+    }
+
+
+    .chat-form {
+        gap: 7px;
+    }
+
+
+    .chat-form input {
+        font-size: 14px;
+    }
+
+
+    .chat-form button {
+        width: 45px;
+
+        min-width: 45px;
+    }
+
+}

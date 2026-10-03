@@ -1,0 +1,113 @@
+{% extends 'mascotas/base.html' %}
+
+{% block title %}
+    Citas de {{ mascota.nombre }}
+{% endblock %}
+
+{% block content %}
+
+    <h2>
+        📅 Citas de {{ mascota.nombre }}
+    </h2>
+
+    <a
+        href="{% url 'crear_cita' mascota.id %}"
+        class="btn">
+
+        + Registrar nueva cita
+
+    </a>
+
+    <br><br>
+
+    {% if citas %}
+
+        {% for cita in citas %}
+
+            <div class="appointment">
+
+                <h3>
+                    📅 {{ cita.fecha }}
+                </h3>
+
+                <p>
+                    <strong>Motivo:</strong>
+                    {{ cita.motivo }}
+                </p>
+
+                <p>
+                    <strong>Estado:</strong>
+
+                    {% if cita.estado == 'Pendiente' %}
+
+                        <span class="status status-pendiente">
+                            {{ cita.estado }}
+                        </span>
+
+                    {% elif cita.estado == 'Confirmada' %}
+
+                        <span class="status status-confirmada">
+                            {{ cita.estado }}
+                        </span>
+
+                    {% elif cita.estado == 'Completada' %}
+
+                        <span class="status status-completada">
+                            {{ cita.estado }}
+                        </span>
+
+                    {% elif cita.estado == 'Cancelada' %}
+
+                        <span class="status status-cancelada">
+                            {{ cita.estado }}
+                        </span>
+
+                    {% endif %}
+
+                </p>
+
+                <br>
+
+                <a
+                    href="{% url 'editar_cita' mascota.id cita.id %}"
+                    class="btn">
+
+                    ✏️ Editar cita
+
+                </a>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="card">
+
+            <p>
+                Esta mascota no tiene citas registradas.
+            </p>
+
+            <a
+                href="{% url 'crear_cita' mascota.id %}"
+                class="btn">
+
+                Registrar primera cita
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+    <br>
+
+    <a
+        href="{% url 'detalle_mascota' mascota.id %}"
+        class="btn btn-secondary">
+
+        ← Volver al detalle
+
+    </a>
+
+{% endblock %}

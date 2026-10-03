@@ -1,0 +1,19 @@
+{
+  "builds": [
+    {
+      "src": "landing/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "landing/wsgi.py"
+    }
+  ],
+  "functions": {
+    "landing/wsgi.py": {
+      "maxDuration": 60
+    }
+  }
+}

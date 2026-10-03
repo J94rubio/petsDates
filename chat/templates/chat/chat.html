@@ -1,0 +1,423 @@
+{% extends 'mascotas/base.html' %}
+
+{% block title %}
+    Asistente veterinario
+{% endblock %}
+
+{% block content %}
+
+<div class="chat-container">
+
+    <div class="chat-header">
+
+        <div class="chat-header-icon">🩺</div>
+
+        <div>
+            <h2>Asistente veterinario</h2>
+            <p>Consulta dudas sobre la salud y el cuidado de tus mascotas.</p>
+        </div>
+
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+
+        <div class="message message-bot">
+
+            <div class="message-name">🤖 Asistente</div>
+
+            <p>¡Hola! Soy tu asistente veterinario. ¿En qué puedo ayudarte hoy?</p>
+
+        </div>
+
+        <div class="message message-bot typing-message"
+             id="typing-message"
+             style="display: none;">
+
+            <div class="message-name">🤖 Asistente</div>
+
+            <div class="typing-content">
+                Escribiendo
+                <span class="typing-dots">
+                    <span>.</span><span>.</span><span>.</span>
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <form id="chat-form" class="chat-form" method="post" autocomplete="off">
+
+        {% csrf_token %}
+
+        <input type="text"
+               id="chat-input"
+               name="mensaje"
+               placeholder="Escribe tu pregunta..."
+               required>
+
+        <button type="submit" id="chat-submit">
+            <span id="chat-send-icon">➤</span>
+            <span id="chat-loader" class="chat-loader"></span>
+        </button>
+
+    </form>
+
+    <div class="chat-disclaimer">
+        ⚠️ Este asistente es informativo y no reemplaza la consulta con un veterinario.
+    </div>
+
+</div>
+
+<script>
+
+    const chatForm = document.getElementById('chat-form');
+
+    const chatSubmit = document.getElementById('chat-submit');
+
+    const chatLoader = document.getElementById('chat-loader');
+
+    const chatSendIcon = document.getElementById('chat-send-icon');
+
+    const chatInput = document.getElementById('chat-input');
+
+    const typingMessage = document.getElementById('typing-message');
+
+    const chatMessages = document.getElementById('chat-messages');
+
+
+    /*
+    ==================================================
+    FUNCIÓN PARA HACER SCROLL AL FINAL
+    ==================================================
+    */
+
+    function scrollChatToBottom() {
+
+        chatMessages.scrollTo({
+            top: chatMessages.scrollHeight,
+            behavior: 'smooth'
+        });
+
+    }
+
+
+    /*
+    ==================================================
+    MOSTRAR LOADING
+    ==================================================
+    */
+
+    function mostrarLoading() {
+
+        chatSubmit.disabled = true;
+
+        chatInput.disabled = true;
+
+        chatSendIcon.style.display = 'none';
+
+        chatLoader.style.display = 'block';
+
+        typingMessage.style.display = 'flex';
+
+        scrollChatToBottom();
+
+    }
+
+
+    /*
+    ==================================================
+    OCULTAR LOADING
+    ==================================================
+    */
+
+    function ocultarLoading() {
+
+        chatSubmit.disabled = false;
+
+        chatInput.disabled = false;
+
+        chatLoader.style.display = 'none';
+
+        chatSendIcon.style.display = 'inline';
+
+        typingMessage.style.display = 'none';
+
+    }
+
+
+    /*
+    ==================================================
+    CREAR MENSAJE DEL USUARIO
+    ==================================================
+    */
+
+    function agregarMensajeUsuario(mensaje) {
+
+        const message = document.createElement('div');
+
+        message.className =
+            'message message-user';
+
+        message.innerHTML = `
+
+            <div class="message-name">
+                👤 Tú
+            </div>
+
+            <p></p>
+
+        `;
+
+        message.querySelector('p').textContent =
+            mensaje;
+
+        chatMessages.insertBefore(message, typingMessage);
+
+        scrollChatToBottom();
+
+    }
+
+
+    /*
+    ==================================================
+    CREAR MENSAJE DEL ASISTENTE
+    ==================================================
+    */
+
+    function agregarMensajeAsistente(respuesta) {
+
+        const message = document.createElement('div');
+
+        message.className =
+            'message message-bot';
+
+        const nombre = document.createElement('div');
+
+        nombre.className =
+            'message-name';
+
+        nombre.textContent =
+            '🤖 Asistente';
+
+        const contenido = document.createElement('p');
+
+        /*
+        Convertimos saltos de línea
+        */
+
+        contenido.textContent =
+            respuesta;
+
+        contenido.style.whiteSpace =
+            'pre-line';
+
+        message.appendChild(nombre);
+
+        message.appendChild(contenido);
+
+        chatMessages.insertBefore(message, typingMessage);
+
+        scrollChatToBottom();
+
+    }
+
+
+    /*
+    ==================================================
+    ENVIAR MENSAJE
+    ==================================================
+    */
+
+    chatForm.addEventListener(
+        'submit',
+        async function(event) {
+
+            /*
+            Evitar recarga de página
+            */
+
+            event.preventDefault();
+
+
+            const mensaje =
+                chatInput.value.trim();
+
+
+            /*
+            No enviar mensajes vacíos
+            */
+
+            if (!mensaje) {
+                return;
+            }
+
+
+            /*
+            Crear FormData antes de vaciar/deshabilitar el input
+            */
+
+            const formData =
+                new FormData(chatForm);
+
+            formData.set('mensaje', mensaje);
+
+
+            /*
+            Mostrar mensaje inmediatamente
+            */
+
+            agregarMensajeUsuario(mensaje);
+
+
+            /*
+            Limpiar input
+            */
+
+            chatInput.value = '';
+
+
+            /*
+            Mostrar loading
+            */
+
+            mostrarLoading();
+
+
+            try {
+
+                /*
+                Enviar a Django
+                */
+
+                const response =
+                    await fetch(
+                        window.location.pathname,
+                        {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With':
+                                    'XMLHttpRequest'
+                            }
+                        }
+                    );
+
+
+                /*
+                Convertir respuesta
+                */
+
+                const data =
+                    await response.json();
+
+
+                /*
+                Verificar errores HTTP
+                */
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        'Ocurrió un error al procesar el mensaje.'
+                    );
+
+                }
+
+
+                /*
+                Agregar respuesta de IA
+                */
+
+                agregarMensajeAsistente(
+                    data.respuesta
+                );
+
+
+            } catch (error) {
+
+                /*
+                Mostrar error en el chat
+                */
+
+                agregarMensajeAsistente(
+                    '⚠️ ' + (error.message ||
+                    'Lo siento, ocurrió un error al procesar tu mensaje.')
+                );
+
+                console.error(
+                    'Error del chat:',
+                    error
+                );
+
+            } finally {
+
+                /*
+                Ocultar loading
+                */
+
+                ocultarLoading();
+
+
+                /*
+                Volver a enfocar input
+                */
+
+                chatInput.focus();
+
+            }
+
+        }
+    );
+
+
+    /*
+    ==================================================
+    ENTER PARA ENVIAR
+    ==================================================
+    */
+
+    chatInput.addEventListener(
+        'keydown',
+        function(event) {
+
+            if (
+                event.key === 'Enter' &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                if (!chatSubmit.disabled) {
+
+                    chatForm.requestSubmit();
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /*
+    ==================================================
+    SCROLL INICIAL
+    ==================================================
+    */
+
+    window.addEventListener(
+        'load',
+        function() {
+
+            scrollChatToBottom();
+
+            chatInput.focus();
+
+        }
+    );
+
+</script>
+
+{% endblock %}

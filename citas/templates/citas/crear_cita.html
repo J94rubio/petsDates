@@ -1,0 +1,33 @@
+{% extends 'mascotas/base.html' %}
+
+{% block title %}
+    Registrar cita
+{% endblock %}
+
+{% block content %}
+
+    <h2>Registrar cita</h2>
+
+    <h3>
+        Mascota: {{ mascota.nombre }}
+    </h3>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Guardar cita
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="{% url 'citas_mascota' mascota.id %}">
+        Cancelar
+    </a>
+
+{% endblock %}  
