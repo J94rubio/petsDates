@@ -181,6 +181,52 @@ h3 {
 
 
 /* =========================
+   NAVEGACIÓN E INICIO
+========================= */
+
+nav {
+    display: flex;
+    gap: 24px;
+}
+
+.home-hero {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.home-hero p {
+    color: #6b7280;
+    font-size: 18px;
+}
+
+.home-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+.home-options .card {
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.home-options .card-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.home-options .card p {
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+.chat-back {
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+
+/* =========================
    FOOTER
 ========================= */
 

@@ -1,0 +1,52 @@
+{% extends 'mascotas/base.html' %}
+
+{% block title %}
+    Inicio
+{% endblock %}
+
+{% block content %}
+
+    <section class="home-hero">
+
+        <h2>Bienvenido a DatesPets</h2>
+
+        <p>
+            Gestiona tus mascotas, sus citas veterinarias
+            y consulta a nuestro asistente.
+        </p>
+
+    </section>
+
+    <section class="home-options">
+
+        <div class="card">
+
+            <div class="card-icon">🐾</div>
+
+            <h3>Mis mascotas</h3>
+
+            <p>Consulta y registra tus mascotas y sus citas.</p>
+
+            <a href="{% url 'lista_mascotas' %}" class="btn">
+                Ver mascotas
+            </a>
+
+        </div>
+
+        <div class="card">
+
+            <div class="card-icon">🩺</div>
+
+            <h3>Asistente veterinario</h3>
+
+            <p>Resuelve dudas sobre el cuidado y la salud de tu mascota.</p>
+
+            <a href="{% url 'chat_veterinario' %}" class="btn">
+                Ir al chat
+            </a>
+
+        </div>
+
+    </section>
+
+{% endblock %}
